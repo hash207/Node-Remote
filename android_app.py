@@ -150,6 +150,30 @@ class TVRemoteApp(MDApp):
         media_box.add_widget(MDBoxLayout()) # Right spacer
         root.add_widget(media_box)
         
+        # --- YouTube Button ---
+        youtube_box = MDBoxLayout(
+            orientation='horizontal', 
+            padding=[dp(50), dp(10), dp(50), dp(0)], 
+            size_hint_y=None, 
+            height=dp(60),
+            pos_hint={"center_x": .5}
+        )
+        youtube_box.add_widget(MDBoxLayout())
+        youtube_box.add_widget(
+            MDRaisedButton(
+                text="YOUTUBE", 
+                md_bg_color=get_color_from_hex("#FF0000"),
+                theme_text_color="Custom",
+                text_color="white",
+                size_hint=(None, None),
+                size=(dp(200), dp(40)),
+                pos_hint={"center_x": .5},
+                on_release=lambda x: self.send_command("YOUTUBE")
+            )
+        )
+        youtube_box.add_widget(MDBoxLayout())
+        root.add_widget(youtube_box)
+        
         root.add_widget(MDBoxLayout()) # Bottom spacer to push everything up
         
         return root
