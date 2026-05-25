@@ -1,0 +1,12 @@
+vol_up:00FD22DD
+vol_down:00FDC23D
+ok:00FDA857
+arrow_up:00FD6897
+arrow_down:00FDE817
+arrow_left:00FD9867
+arrow_right:00FD18E7
+source:00FD48B7
+youtube:00FD55AA
+mute:00FD708F
+home:00FD04FB
+back:00FD12ED
