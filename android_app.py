@@ -34,17 +34,20 @@ KV_HELPERS = '''
     orientation: "vertical"
     spacing: "12dp"
     size_hint_y: None
-    height: "150dp"
+    height: "180dp"  # Increased height to fit the second row of buttons
 
     MDLabel:
         text: "Active Days"
         font_style: "Caption"
         theme_text_color: "Hint"
 
-    MDBoxLayout:
+    # Changed from MDBoxLayout to MDGridLayout
+    MDGridLayout:
         id: day_container
-        orientation: "horizontal"
-        spacing: "5dp"
+        cols: 4          # Forces a new row after 4 buttons
+        spacing: "10dp"  # Gives the buttons a little breathing room
+        size_hint_y: None
+        height: self.minimum_height
         
         DayChip:
             text: "Su"
