@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from apscheduler.schedulers.background import BackgroundScheduler
 import paho.mqtt.client as mqtt
 from app.database import init_db, save_rule, get_all_rules, delete_rule
+from time import sleep
 
 # --- CONFIGURATION ---
 MQTT_BROKER = "broker.emqx.io"
@@ -22,6 +23,9 @@ DAY_MAP = {
     "We": "wed", "Th": "thu", "Fr": "fri", "Sa": "sat"
 }
 
+# --- IR DEFAULT COMMANDS ---
+IR_CMDS = ["VOL_UP", "VOL_DOWN", "UP", "DOWN", "POWER_TOGGLE", "RIGHT", "LEFT", "OK", "MUTE", "SOURCE", "BACK", "YOUTUBE"]
+ 
 def parse_days(days_text: str) -> str:
     """Converts 'Su • Mo' into 'sun,mon'"""
     if "No Days" in days_text or not days_text:
@@ -39,10 +43,24 @@ class SchedulePayload(BaseModel):
 
 def fire_mqtt_action(payload: str):
     print(f"[ALARM TRIGGERED] Firing payload: {payload} to {MQTT_TOPIC}")
-    try:
-        mqtt_client.publish(MQTT_TOPIC, payload)
-    except Exception as e:
-        print(f"Failed to publish scheduled MQTT message: {e}")
+    if "," not in payload:
+        try:
+            mqtt_client.publish(MQTT_TOPIC, payload)
+        except Exception as e:
+            print(f"Failed to publish scheduled MQTT message: {e}")
+    else:
+        commands = payload.replace(" ", "").split(",")
+        for cmd in commands:
+            if cmd in IR_CMDS:
+                try:
+                    mqtt_client.publish(MQTT_TOPIC, cmd)
+                    print(f"Published command: {cmd}")
+                except Exception as e:
+                    print(f"Failed to publish command '{cmd}': {e}")
+            elif "WAIT" in cmd:
+                sleep(int(cmd[cmd.find("_")+1:]) if "_" in cmd else int(cmd[cmd.find("T")+1:]))
+            else:
+                print(f"Unknown command in payload: {cmd}")
 
 def load_schedules_on_startup():
     """Reads the database and loads all saved rules into the live clock."""
