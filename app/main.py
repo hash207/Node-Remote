@@ -48,6 +48,15 @@ def fire_mqtt_action(payload: str):
             mqtt_client.publish(MQTT_TOPIC, payload)
         except Exception as e:
             print(f"Failed to publish scheduled MQTT message: {e}")
+    if payload == "START QURAN":
+        mqtt_cmds = ["POWER", "WAIT_5", "HOME", "WAIT_1", "RIGHT", "WAIT_1", "RIGHT", "WAIT_1", "RIGHT", "WAIT_1", "RIGHT", "WAIT_1", "RIGHT", "WAIT_1", "RIGHT", "WAIT_1", "LEFT", "WAIT_1", "OK", "WAIT_1", "OK", "WAIT_2", "RIGHT", "RIGHT", "WAIT_1", "OK"]  # Example sequence to start Quran app
+        for mqtt_cmd in mqtt_cmds:
+            try:
+                mqtt_client.publish(MQTT_TOPIC, mqtt_cmd)
+                print(f"Published command: {mqtt_cmd}")
+            except Exception as e:
+                print(f"Failed to publish command '{mqtt_cmd}': {e}")
+            sleep(1)  # Short delay between commands
     else:
         commands = payload.replace(" ", "").split(",")
         for cmd in commands:
