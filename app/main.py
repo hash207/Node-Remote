@@ -24,7 +24,7 @@ DAY_MAP = {
 }
 
 # --- IR DEFAULT COMMANDS ---
-IR_CMDS = ["VOL_UP", "VOL_DOWN", "UP", "DOWN", "POWER_TOGGLE", "RIGHT", "LEFT", "OK", "MUTE", "SOURCE", "BACK", "YOUTUBE"]
+IR_CMDS = ["VOL_UP", "VOL_DOWN", "UP", "DOWN", "POWER_TOGGLE", "RIGHT", "LEFT", "OK", "MUTE", "SOURCE", "BACK", "YOUTUBE", "HOME"]
  
 def parse_days(days_text: str) -> str:
     """Converts 'Su • Mo' into 'sun,mon'"""
@@ -174,3 +174,6 @@ def remove_schedule(rule_id: int):
         return {"status": "success", "message": f"Rule {rule_id} deleted."}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
+
+if __name__ == "__main__":
+    pass
