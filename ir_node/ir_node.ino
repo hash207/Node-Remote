@@ -113,6 +113,7 @@ void setup() {
   ir_codes["SOURCE"] = 0x00FD48B7;
   ir_codes["BACK"] = 0x00FD12ED;
   ir_codes["YOUTUBE"] = 0x00FD55AA;
+  ir_codes["MEDIA"] = 0x00FDCC33;
 }
 
 void loop() {

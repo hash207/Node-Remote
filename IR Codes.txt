@@ -10,3 +10,4 @@ youtube:00FD55AA
 mute:00FD708F
 home:00FD04FB
 back:00FD12ED
+media:00FDCC33
