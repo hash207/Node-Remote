@@ -1,10 +1,12 @@
+import os
+from time import sleep
+from pyngrok import ngrok, conf
 from fastapi import FastAPI
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 from apscheduler.schedulers.background import BackgroundScheduler
 import paho.mqtt.client as mqtt
 from app.database import init_db, save_rule, get_all_rules, delete_rule
-from time import sleep
 
 # --- CONFIGURATION ---
 MQTT_BROKER = "broker.emqx.io"
@@ -111,13 +113,30 @@ async def lifespan(app: FastAPI):
     print("Starting up Home Automation Server Engine...")
     mqtt_client.connect(MQTT_BROKER, 1883, 60)
     mqtt_client.loop_start()
-    
-    # --- THE MISSING LINK ---
     load_schedules_on_startup() 
-    
     scheduler.start()
-    yield
+    
+    # --- NGROK SETUP INTEGRATION ---
+    auth_token = os.environ.get("NGROK_AUTH_TOKEN")
+    if auth_token:
+        # Configure custom binary path to avoid permission issues
+        home_dir = os.path.expanduser("~")
+        ngrok_path = os.path.join(home_dir, "ngrok_bin")
+        os.makedirs(ngrok_path, exist_ok=True)
+        conf.get_default().ngrok_path = os.path.join(ngrok_path, "ngrok")
+
+        # Set token and start tunnel on Uvicorn's port (8000)
+        ngrok.set_auth_token(auth_token)
+        public_url = ngrok.connect(8000, domain="safe-shiner-daring.ngrok-free.app").public_url
+        print(f"Ngrok tunnel established at: {public_url}")
+    else:
+        print("WARNING: NGROK_AUTH_TOKEN not found. Running local-only.")
+
+    yield # Server is actively running here
+
     print("Shutting down Server Engine safely...")
+    if auth_token:
+        ngrok.kill() # Safely close the tunnel
     scheduler.shutdown()
     mqtt_client.loop_stop()
     mqtt_client.disconnect()
