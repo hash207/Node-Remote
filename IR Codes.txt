@@ -1,3 +1,4 @@
+power:20DF10EF
 vol_up:00FD22DD
 vol_down:00FDC23D
 ok:00FDA857

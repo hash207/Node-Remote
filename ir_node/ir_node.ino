@@ -100,7 +100,7 @@ void setup() {
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 
-  ir_codes["POWER"] = 0x00FD22DD;
+  ir_codes["POWER"] = 0x20DF10EF;
   ir_codes["VOL_UP"] = 0x00FD22DD;
   ir_codes["VOL_DOWN"] = 0x00FDC23D;
   ir_codes["OK"] = 0x00FDA857;
